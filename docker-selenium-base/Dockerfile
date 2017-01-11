@@ -8,28 +8,20 @@ FROM rajivbhati12/ubuntu_testuser:v1
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>
 
+USER root 
 # Selenium Standalone Server version
-ENV Selenium_Ver_Major 3
-ENV Selenium_Ver_Minor 0
-ENV Selenium_Ver_Patch 1 
+ENV SELENIUM_V_MAJOR 3
+ENV SELENIUM_V_MINOR 0
+ENV SELENIUM_V_PATCH 1 
 
 # Installation directory
-ENV Install_Dir /opt/selenium-base
-
-# Set root user for modification
-USER root
+ENV INSTALL_DIR /opt/selenium-base
 
 # Download selenium standalone server
-RUN mkdir ${Install_Dir}
-RUN wget -O ${Install_Dir}/selenium-server-standalone.jar http://selenium-release.storage.googleapis.com/${Selenium_Ver_Major}.${Selenium_Ver_Minor}/selenium-server-standalone-${Selenium_Ver_Major}.${Selenium_Ver_Minor}.${Selenium_Ver_Patch}.jar
+RUN mkdir ${INSTALL_DIR}
+RUN wget -q -O ${INSTALL_DIR}/selenium-server-standalone.jar http://selenium-release.storage.googleapis.com/${SELENIUM_V_MAJOR}.${SELENIUM_V_MINOR}/selenium-server-standalone-${SELENIUM_V_MAJOR}.${SELENIUM_V_MINOR}.${SELENIUM_V_PATCH}.jar
 
 # Share selenium standalone server installed volume to enable sharing of server jar between cointainers
-VOLUME ${Install_Dir}
+VOLUME ${INSTALL_DIR}
 
-# Enable execute permission
-#RUN chmod a+x ${INSTALL_DIR}/selenium-server-standalone.jar
-
-# Switch back to testuser
 USER testuser
-
-
