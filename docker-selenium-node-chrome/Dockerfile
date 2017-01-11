@@ -1,0 +1,65 @@
+# Testuser image as base
+FROM rajivbhati12/ubuntu_selenium_node_base:v1 
+
+# Set author
+MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>
+
+USER root
+# Update Path to accept java command
+ENV PATH "$PATH:/usr/lib/jvm/java-8-openjdk-amd64/bin/"
+
+# Symlink for selenium server standalone jar
+RUN mkdir /opt/selenium && ln -s /opt/selenium-base/selenium-server-standalone.jar /opt/selenium/selenium-server-standalone.jar
+
+#============================================
+# Google Chrome
+#============================================
+# can specify versions by CHROME_VERSION;
+#  e.g. google-chrome-stable=53.0.2785.101-1
+#       google-chrome-beta=53.0.2785.92-1
+#       google-chrome-unstable=54.0.2840.14-1
+#       latest (equivalent to google-chrome-stable)
+#       google-chrome-beta  (pull latest beta)
+#============================================
+ARG CHROME_VERSION="google-chrome-stable"
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+  && apt-get update -qqy \
+  && apt-get -qqy install \
+    ${CHROME_VERSION:-google-chrome-stable} \
+  && rm /etc/apt/sources.list.d/google-chrome.list \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
+#==================
+# Chrome webdriver
+#==================
+ARG CHROME_DRIVER_VERSION=2.25
+RUN wget -q --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
+  && rm -rf /opt/selenium/chromedriver \
+  && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium \
+  && rm /tmp/chromedriver_linux64.zip \
+  && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && chmod 755 /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION \
+  && ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
+
+#========================
+# Selenium Configuration
+#========================
+ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
+ENV NODE_MAX_INSTANCES 1
+ENV NODE_MAX_SESSION 1
+ENV NODE_REGISTER_CYCLE 5000
+ENV NODE_PORT 5555
+RUN wget -q -O /opt/selenium/generate_config https://github.com/SeleniumHQ/docker-selenium/raw/master/NodeChrome/generate_config
+RUN chmod +x /opt/selenium/generate_config
+
+#=================================
+# Chrome Launch Script Modication
+#=================================
+RUN mkdir -p /opt/google/chrome
+RUN wget -q -O /opt/google/chrome/chrome_launcher.sh https://github.com/SeleniumHQ/docker-selenium/raw/master/NodeChrome/chrome_launcher.sh
+RUN chmod +x /opt/google/chrome/google-chrome
+RUN chown -R testuser:testuser /opt/selenium
+
+
+USER testuser
