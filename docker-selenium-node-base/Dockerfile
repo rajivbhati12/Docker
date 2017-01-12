@@ -1,9 +1,10 @@
 #Testuser image as base
-FROM rajivbhati12/ubuntu_testuser:v1
+FROM rajivbhati12/ubuntu_testuser:latest
 
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>
 
+# Switch to root user for modification
 USER root
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -11,7 +12,7 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 
 
 # Update Path to accept java command
-ENV PATH "$PATH:/usr/lib/jvm/java-8-openjdk-amd64/bin/"
+ENV PATH "$PATH:/usr/lib/jvm/java"
 
 #===================
 # Timezone settings

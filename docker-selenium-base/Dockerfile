@@ -3,25 +3,25 @@
 ######################
 
 # Testuser image as base
-FROM rajivbhati12/ubuntu_testuser:v1
+FROM rajivbhati12/ubuntu_testuser:latest
 
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>
 
 USER root 
 # Selenium Standalone Server version
-ENV SELENIUM_V_MAJOR 3
-ENV SELENIUM_V_MINOR 0
-ENV SELENIUM_V_PATCH 1 
+ENV Major_Version 3
+ENV Minor_Version 0
+ENV Patch_Version 1 
 
 # Installation directory
-ENV INSTALL_DIR /opt/selenium-base
+ENV Install_Dir /opt/selenium-base
 
 # Download selenium standalone server
-RUN mkdir ${INSTALL_DIR}
-RUN wget -q -O ${INSTALL_DIR}/selenium-server-standalone.jar http://selenium-release.storage.googleapis.com/${SELENIUM_V_MAJOR}.${SELENIUM_V_MINOR}/selenium-server-standalone-${SELENIUM_V_MAJOR}.${SELENIUM_V_MINOR}.${SELENIUM_V_PATCH}.jar
+RUN mkdir ${Install_Dir}
+RUN wget -q -O ${Install_Dir}/selenium-server-standalone.jar http://selenium-release.storage.googleapis.com/${Major_Version}.${Minor_Version}/selenium-server-standalone-${Major_Version}.${Minor_Version}.${Patch_Version}.jar
 
 # Share selenium standalone server installed volume to enable sharing of server jar between cointainers
-VOLUME ${INSTALL_DIR}
+VOLUME ${Install_Dir}
 
 USER testuser

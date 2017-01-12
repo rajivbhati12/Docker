@@ -1,12 +1,14 @@
 # Testuser image as base
-FROM rajivbhati12/ubuntu_testuser:v1
+FROM rajivbhati12/ubuntu_testuser:latest
 
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>
 
+# Switch to root user for modifications
 USER root
+
 # Update Path to accept java command
-ENV PATH "$PATH:/usr/lib/jvm/java-8-openjdk-amd64/bin/"
+ENV PATH "$PATH:/usr/lib/jvm/java"
 
 # Symlink for selenium server standalone jar
 RUN mkdir /opt/selenium && ln -s /opt/selenium-base/selenium-server-standalone.jar /opt/selenium/selenium-server-standalone.jar
