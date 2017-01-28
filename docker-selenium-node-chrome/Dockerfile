@@ -1,5 +1,5 @@
 # Testuser image as base
-FROM rajivbhati12/ubuntu_selenium_node_base:latest 
+FROM rajivbhati12/ubuntu_selenium_node_base 
 
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>

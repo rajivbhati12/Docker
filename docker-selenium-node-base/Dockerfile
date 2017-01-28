@@ -1,5 +1,5 @@
 #Testuser image as base
-FROM rajivbhati12/ubuntu_testuser:latest
+FROM rajivbhati12/ubuntu_testuser
 
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>

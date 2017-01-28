@@ -1,5 +1,5 @@
 # Use Test image 
-FROM rajivbhati12/ubuntu_testuser:latest
+FROM rajivbhati12/ubuntu_java
 
 # Set author
 MAINTAINER Rajiv Bhati<rajivbhati12@gmail.com>
