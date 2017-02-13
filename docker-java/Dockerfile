@@ -14,8 +14,6 @@ ENV Install_Default_Java 9-jre-headless
 ENV Install_Java openjdk-${Install_Java:-${Install_Default_Java}}
 ENV Share_Java /usr/lib/jvm
 
-RUN echo "Installing: "${Install_Java}
-
 # Get update list of package from server and install java
 RUN apt-get update && \
 	apt-get -qqy install ${Install_Java} && \
