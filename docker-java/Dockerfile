@@ -1,3 +1,18 @@
+#############################################################################
+# build command [example] : docker build -t rajivbhati12/ubuntu_java_jre_headless --build-arg Install_Java=9-jre-headless $PWD/docker-java/.
+# build arg:	
+#	1]		argument 	-> Install_Java
+#			type		-> Optional
+# 			value format	-> <version>-<jre/jdk>{-<headless>}
+#			example		-> 8-jre, 8-jdk, 8-jdk-headless 
+#
+# run command [example] : docker run -it --name java-jre-headless rajivbhati12/ubuntu_java_jre_headless
+# sharing: with this container [start/stop], others can access jdk/jre by mounting --volume-from this container
+# 	example: docker run --volume-from java-jre rajivbhati12/ubuntu_selenium_grid  
+# known issues : Unable to set JAVA_HOME; refer comment by mway in https://github.com/docker/docker/issues/684
+# work around: caller must set static value for JAVA_HOME, example ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre  
+#############################################################################
+
 # Use Test image 
 FROM rajivbhati12/ubuntu_testuser
 
@@ -9,21 +24,18 @@ ARG Install_Java
 
 USER root
 
-# Java version in install directory
-ENV Install_Default_Java 9-jre-headless
-ENV Install_Java openjdk-${Install_Java:-${Install_Default_Java}}
-ENV Share_Java /usr/lib/jvm
-
 # Get update list of package from server and install java
 RUN apt-get update && \
-	apt-get -qqy install ${Install_Java} && \
+	apt-get -qqy install openjdk-${Install_Java:-9-jre-headless} && \
 	rm -rf /var/lib/apt/lists/*
 
-
 # Symlink to keep java dir name same
-RUN ln -s $(dirname $(dirname $(dirname $(readlink -f /usr/bin/java))))/bin $(dirname $(dirname $(dirname $(dirname $(readlink -f /usr/bin/java)))))/java
+RUN ln -s /usr/lib/jvm/bin /usr/lib/java
+
+#Set JAVA_HOME
+RUN export JAVA_HOME=`sudo update-java-alternatives -l | awk '{print $3}'` 
 
 # Share java installed volume to enable java access by containers
-VOLUME ${Share_Java}
+VOLUME /usr/lib/jvm
 
 USER testuser
