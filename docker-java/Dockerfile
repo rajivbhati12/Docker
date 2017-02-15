@@ -3,6 +3,7 @@
 # build arg:	
 #	1]		argument 	-> Install_Java
 #			type		-> Optional
+#			default value	-> 9-jre-headless
 # 			value format	-> <version>-<jre/jdk>{-<headless>}
 #			example		-> 8-jre, 8-jdk, 8-jdk-headless 
 #
@@ -29,8 +30,9 @@ RUN apt-get update && \
 	apt-get -qqy install openjdk-${Install_Java:-9-jre-headless} && \
 	rm -rf /var/lib/apt/lists/*
 
-# Symlink to keep java dir name same
-RUN ln -s /usr/lib/jvm/bin /usr/lib/java
+# Symlink to keep java share directory name same
+RUN cd /usr/lib/jvm && \
+	ln -s `sudo update-java-alternatives -l | awk '{print $3}'`/bin java
 
 #Set JAVA_HOME
 RUN export JAVA_HOME=`sudo update-java-alternatives -l | awk '{print $3}'` 
