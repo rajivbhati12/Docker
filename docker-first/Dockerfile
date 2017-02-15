@@ -1,3 +1,13 @@
+#############################################################################
+# build command [example] : docker build -t "rajivbhati12/ubuntu_testuser" --build-arg TestUser_Password=test@123 $PWD/docker-first/.
+# build arg:
+#	1]	argument	-> TestUser_Password
+#		type		-> Optional
+#		default value	-> main@123
+# run command [example] : docker run -it --name testuser-box rajivbhati12/ubuntu_testuser 
+# known issue(s) : debconf: delaying package configuration, since apt-utils is not installed
+# workaround : its a warning and can be ignore : priority -> low
+#############################################################################
 # Base Ubuntu Image 
 FROM ubuntu:16.04
 
@@ -20,9 +30,10 @@ RUN  echo "deb http://archive.ubuntu.com/ubuntu xenial main universe\n" > /etc/a
 
 # Get update list of package from server
 RUN apt-get update && \
-	apt-get -y install sudo && \
-        apt-get -y install wget && \
-	apt-get -y install zip unzip && \
+	apt-get -qqy install sudo && \
+	apt-get -qqy install wget && \
+	apt-get -qqy install zip unzip && \
+	apt-get -qqy install git && \
 	rm -rf /var/lib/apt/lists/*
 
 # Create test user with password less sudo access
